@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // DAILY CORE: deny everything unless a later, reviewed rule explicitly grants access.
+    // Never replace this with allow read, write: if true.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
