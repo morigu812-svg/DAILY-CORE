@@ -3,94 +3,22 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0b1120">
-  <title>DAILY CORE — 今日を、コントロールする。</title>
+  <meta name="theme-color" content="#080b12">
+  <title>DAILY CORE — 共有タスク</title>
   <style>
-    :root{color-scheme:dark;--bg:#080d18;--panel:#101827;--panel2:#0c1422;--line:#253247;--muted:#8b9ab0;--text:#edf3ff;--cyan:#50d8ee;--mint:#4ee0b0;--violet:#a58bff;--rose:#ff7b97}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 90% 0%,#211b43 0,transparent 38%),radial-gradient(ellipse at 0% 32%,#102a3c 0,transparent 42%),var(--bg);color:var(--text);font:15px/1.5 Inter,"Noto Sans JP",system-ui,-apple-system,"Segoe UI",sans-serif}
-    button,input,textarea,select{font:inherit}button{cursor:pointer;color:inherit}.shell{max-width:1120px;margin:auto;padding:28px 28px 52px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:52px}.brand{display:flex;gap:14px;align-items:center}.brandmark{width:46px;height:46px;border:1px solid #4a6a82;border-radius:15px;display:grid;place-items:center;color:var(--cyan);font-size:21px;font-weight:700;box-shadow:inset 0 0 22px #45d7ec16}.brand strong{letter-spacing:.18em;font-size:14px}.brand small{display:block;color:var(--muted);font-size:9px;letter-spacing:.18em;margin-top:3px}.mode{border:1px solid #315b60;border-radius:99px;padding:8px 13px;color:#86ebc5;font-size:10px;letter-spacing:.14em}.mode:before{content:"";display:inline-block;width:7px;height:7px;margin-right:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)}.hero{margin-bottom:30px}.eyebrow{font-size:10px;color:#82e8ed;letter-spacing:.28em;font-weight:650}.hero h1{font-size:clamp(28px,4vw,43px);letter-spacing:.035em;margin:10px 0 8px}.hero p{margin:0;color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}.stat,.panel{background:linear-gradient(145deg,#111a29ed,#0d1522ef);border:1px solid var(--line);border-radius:20px;box-shadow:0 16px 50px #00000018}.stat{min-height:122px;padding:18px 20px}.stat-label{color:var(--muted);font-size:11px}.stat-number{font-size:29px;font-weight:650;margin-top:9px;letter-spacing:-.04em}.stat-number small{font-size:12px;color:#9cabc0;font-weight:450;margin-left:4px}.stat:nth-child(2) .stat-number{color:var(--mint)}.stat:nth-child(3) .stat-number{color:var(--violet)}.stat:nth-child(4) .stat-number{color:var(--cyan)}.progress{height:5px;background:#293448;border-radius:10px;margin-top:12px;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,#8678ff,#49dce6);border-radius:10px;transition:width .25s}.layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.9fr);gap:18px}.panel{padding:21px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.panel h2{font-size:16px;margin:0}.sub{font-size:11px;color:var(--muted);margin-top:3px}.actions{display:flex;gap:8px}.btn{border:1px solid #35435a;background:#182438;border-radius:11px;padding:9px 13px;font-size:12px;transition:.16s}.btn:hover{border-color:#75cfe1;transform:translateY(-1px)}.btn.primary{background:linear-gradient(115deg,#3da9c3,#66b8dd);border:0;color:#07141d;font-weight:700}.btn.ghost{background:#111a29}.date-row{display:flex;align-items:center;gap:9px;margin-bottom:15px}.date-row input{flex:1;min-width:0;background:#090f1b;color:var(--text);border:1px solid #2b394c;border-radius:11px;padding:11px 12px;color-scheme:dark}.task-list{display:grid;gap:9px;min-height:170px}.empty{border:1px dashed #34435a;border-radius:15px;display:grid;place-items:center;text-align:center;color:var(--muted);padding:36px 16px}.empty b{display:block;color:#dbe6f8;font-weight:500;margin-bottom:5px}.task{display:flex;align-items:flex-start;gap:12px;padding:14px;border:1px solid #263449;background:#0c1421;border-radius:14px;transition:.18s}.task:hover{border-color:#3f5b72}.task input[type=checkbox]{appearance:none;flex:none;width:19px;height:19px;margin:2px 0 0;border:1.5px solid #61738b;border-radius:6px;background:#0b1320;cursor:pointer}.task input:checked{border-color:var(--mint);background:var(--mint)}.task input:checked:after{content:"✓";display:block;text-align:center;color:#092019;font-size:13px;font-weight:800;line-height:17px}.task-main{min-width:0;flex:1}.task-title{font-size:14px;overflow-wrap:anywhere}.task.done .task-title{text-decoration:line-through;color:#8291a5}.task-meta{display:flex;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:10px;margin-top:6px}.tag{color:#9deaf1;background:#12303a;border-radius:99px;padding:2px 8px}.task-overdue{color:#ff9cae}.delete{border:0;background:none;color:#77869a;font-size:17px;padding:0 3px}.delete:hover{color:var(--rose)}.focus{margin-top:16px;padding:17px;border:1px solid #2d3b51;border-radius:15px;background:linear-gradient(120deg,#141e2d,#12172b)}.focus-label{font-size:10px;color:#92a4bb;letter-spacing:.1em}.focus-text{margin-top:5px;font-size:14px}.calendar-panel{height:max-content}.month-nav{display:flex;align-items:center;gap:7px}.month-label{font-weight:600;min-width:110px;text-align:center}.icon-btn{width:31px;height:31px;border-radius:9px;border:1px solid #304057;background:#121c2b;font-size:18px}.week,.days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}.week{color:#8493a8;font-size:10px;margin-bottom:7px}.day{position:relative;aspect-ratio:1;display:grid;place-items:center;border:1px solid transparent;border-radius:11px;color:#d6dfec;font-size:12px;cursor:pointer}.day:hover{background:#1b2c3b;border-color:#364b63}.day.muted{color:#526078}.day.today{border-color:#46b6cd;color:#70e2ed}.day.selected{background:#23536b;color:#fff;box-shadow:0 0 18px #48c9dc25}.day.has:after{content:"";position:absolute;bottom:5px;width:4px;height:4px;border-radius:50%;background:var(--mint)}.day.all-done:after{background:var(--violet)}.calendar-legend{display:flex;gap:14px;margin-top:14px;color:var(--muted);font-size:10px}.legend-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--mint);margin-right:5px}.legend-dot.done{background:var(--violet)}.calendar-note{border-top:1px solid #263449;margin-top:17px;padding-top:15px;color:#acbbcf;font-size:12px}.footer{text-align:center;color:#5f6d80;font-size:9px;letter-spacing:.2em;margin:29px 0 0}.modal-backdrop{position:fixed;inset:0;background:#02060bcc;display:none;place-items:center;padding:18px;z-index:5}.modal-backdrop.open{display:grid}.modal{width:min(100%,470px);background:#111a29;border:1px solid #35445b;border-radius:20px;padding:22px;box-shadow:0 25px 90px #000b}.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}.modal-head h2{font-size:18px;margin:0}.close{border:0;background:none;color:#95a4b8;font-size:24px}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:11px;color:#aab7c9}.field input,.field textarea,.field select{width:100%;border:1px solid #344258;background:#0a111e;color:var(--text);border-radius:10px;padding:11px 12px;color-scheme:dark}.field textarea{resize:vertical;min-height:70px}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    @media(max-width:800px){.shell{padding:20px 18px 38px}.topbar{margin-bottom:38px}.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.calendar-panel{order:2}}
-    @media(max-width:480px){.shell{padding:16px 13px 32px}.topbar{margin-bottom:30px}.brandmark{width:40px;height:40px}.brand strong{font-size:12px}.mode{padding:7px 9px;font-size:9px}.stats{gap:9px}.stat{padding:15px;min-height:108px;border-radius:16px}.stat-number{font-size:25px}.panel{padding:16px;border-radius:17px}.panel-head{align-items:flex-start}.actions .btn{padding:8px 10px}.field-row{grid-template-columns:1fr}.hero h1{font-size:29px}}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:#080b12;color:#edf4ff;font:16px/1.6 system-ui,"Noto Sans JP",sans-serif}.card{width:min(92vw,520px);padding:32px;border:1px solid #253348;border-radius:20px;background:#101621;text-align:center}.mark{margin:0 auto 16px;width:48px;height:48px;display:grid;place-items:center;border:1px solid #3b7893;border-radius:15px;color:#52e5ff;font-weight:800;font-size:22px}.sub{color:#8b9bb1;font-size:13px}.link{display:inline-block;margin-top:20px;color:#52e5ff;text-underline-offset:4px}
   </style>
+  <script>
+    window.location.replace("https://script.google.com/macros/s/AKfycbyzDjKQJyiKrVh3lpoariDTu0eeJjX-JU2tir2jNbOfk5mDyEyJHz3iFawAXU7_YkXY/exec");
+  </script>
 </head>
 <body>
-  <main class="shell">
-    <header class="topbar">
-      <div class="brand"><div class="brandmark">D</div><div><strong>DAILY CORE</strong><small>PERSONAL TASK SYSTEM</small></div></div>
-      <div class="mode">LOCAL MODE</div>
-    </header>
-    <section class="hero"><div class="eyebrow">FOCUS. TRACK. COMPLETE.</div><h1>今日を、コントロールする。</h1><p>タスクを整理して、一日ずつ前に進もう。</p></section>
-    <section class="stats" aria-label="選択日のサマリー">
-      <article class="stat"><div class="stat-label">選択日のタスク</div><div class="stat-number"><span id="total">0</span><small>件</small></div></article>
-      <article class="stat"><div class="stat-label">完了</div><div class="stat-number"><span id="completed">0</span><small>件</small></div></article>
-      <article class="stat"><div class="stat-label">達成率</div><div class="stat-number"><span id="rate">0</span>%</div><div class="progress"><span id="progress" style="width:0%"></span></div></article>
-      <article class="stat"><div class="stat-label">残りの合計所要時間</div><div class="stat-number"><span id="minutes">0</span><small>分</small></div><div class="sub">未完了タスクのみを集計</div></article>
-    </section>
-    <div class="layout">
-      <section class="panel">
-        <div class="panel-head"><div><h2>タスク一覧</h2><div class="sub" id="listSub">選択した日付のタスク</div></div><button class="btn primary" id="addBtn">＋ 追加</button></div>
-        <div class="date-row"><label class="sr-only" for="selectedDate">表示する日付</label><input id="selectedDate" type="date"><button class="btn ghost" id="todayBtn">今日</button></div>
-        <div class="task-list" id="taskList"></div>
-        <div class="focus"><div class="focus-label">今日のフォーカス</div><div class="focus-text" id="focusText">小さな一歩を積み重ねよう。</div></div>
-      </section>
-      <aside class="panel calendar-panel">
-        <div class="panel-head"><div><h2>カレンダー</h2><div class="sub">日付を選んで過去の記録を確認</div></div><div class="month-nav"><button class="icon-btn" id="prevMonth" aria-label="前の月">‹</button><span id="monthLabel" class="month-label"></span><button class="icon-btn" id="nextMonth" aria-label="次の月">›</button></div></div>
-        <div class="week" aria-hidden="true"><span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span></div>
-        <div class="days" id="calendarDays"></div>
-        <div class="calendar-legend"><span><i class="legend-dot"></i>タスクあり</span><span><i class="legend-dot done"></i>すべて完了</span></div>
-        <div class="calendar-note" id="calendarNote">日付を選ぶと、その日のタスクが表示されます。</div>
-      </aside>
-    </div>
-    <footer class="footer">DAILY CORE · YOUR DAY, YOUR CONTROL</footer>
+  <main class="card">
+    <div class="mark">D</div>
+    <h1>DAILY CORE</h1>
+    <p>共有タスクを開いています…</p>
+    <p class="sub">タスクは既存の Google スプレッドシートに保存され、同じ Google アカウントで他の端末からも見られます。</p>
+    <a class="link" href="https://script.google.com/macros/s/AKfycbyzDjKQJyiKrVh3lpoariDTu0eeJjX-JU2tir2jNbOfk5mDyEyJHz3iFawAXU7_YkXY/exec">開かない場合はこちら</a>
   </main>
-  <div class="modal-backdrop" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <form class="modal" id="taskForm"><div class="modal-head"><h2 id="modalTitle">タスクを追加</h2><button type="button" class="close" id="closeModal" aria-label="閉じる">×</button></div>
-      <div class="field"><label for="taskTitle">タスク名 *</label><input id="taskTitle" required maxlength="140" placeholder="例：企画書を仕上げる"></div>
-      <div class="field-row"><div class="field"><label for="taskDate">日付</label><input id="taskDate" type="date" required></div><div class="field"><label for="taskMinutes">所要時間（分）</label><input id="taskMinutes" type="number" min="0" max="1440" value="30"></div></div>
-      <div class="field"><label for="taskTag">カテゴリ（任意）</label><input id="taskTag" maxlength="32" placeholder="例：仕事、学習"></div>
-      <div class="field"><label for="taskMemo">メモ（任意）</label><textarea id="taskMemo" maxlength="500" placeholder="補足や次の一歩"></textarea></div>
-      <div class="modal-actions"><button type="button" class="btn ghost" id="cancelModal">キャンセル</button><button class="btn primary" type="submit">保存する</button></div>
-    </form>
-  </div>
-  <script>
-    (()=>{
-      const KEY='daily-core-pages-v1';
-      const $=id=>document.getElementById(id);
-      const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-      const parse=s=>{const [y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d)};
-      const today=iso(new Date());
-      let selected=today, viewDate=parse(today), tasks=load();
-      function load(){try{const value=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(value)?value:[]}catch{return []}}
-      function persist(){localStorage.setItem(KEY,JSON.stringify(tasks))}
-      function safe(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-      function render(){
-        $('selectedDate').value=selected;
-        const list=tasks.filter(t=>t.date===selected).sort((a,b)=>(a.done-b.done)||(a.created-b.created));
-        const done=list.filter(t=>t.done).length, total=list.length, rate=total?Math.round(done/total*100):0;
-        $('total').textContent=total;$('completed').textContent=done;$('rate').textContent=rate;$('progress').style.width=rate+'%';$('minutes').textContent=list.filter(t=>!t.done).reduce((n,t)=>n+(Number(t.minutes)||0),0);
-        $('listSub').textContent=`${parse(selected).toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'})} のタスク`;
-        $('taskList').innerHTML=list.length?list.map(t=>`<article class="task ${t.done?'done':''}"><input type="checkbox" aria-label="${t.done?'完了を解除':'タスクを完了'}: ${safe(t.title)}" data-toggle="${t.id}" ${t.done?'checked':''}><div class="task-main"><div class="task-title">${safe(t.title)}</div><div class="task-meta">${Number(t.minutes)>0?`<span>◷ ${Number(t.minutes)} 分</span>`:''}${t.tag?`<span class="tag">${safe(t.tag)}</span>`:''}${t.memo?`<span>${safe(t.memo)}</span>`:''}</div></div><button class="delete" type="button" aria-label="${safe(t.title)}を削除" data-delete="${t.id}">×</button></article>`).join(''):`<div class="empty"><div><b>${selected===today?'今日はまだタスクがありません':'この日のタスクはありません'}</b>${selected===today?'まずは、今日やることをひとつ登録しよう。':'「＋ 追加」からタスクを登録できます。'}</div></div>`;
-        const pending=list.filter(t=>!t.done);$('focusText').textContent=pending.length?`次は「${pending[0].title}」に取り組もう。`:'小さな一歩を積み重ねよう。';
-        $('monthLabel').textContent=viewDate.toLocaleDateString('ja-JP',{year:'numeric',month:'long'});renderCalendar();
-      }
-      function renderCalendar(){
-        const year=viewDate.getFullYear(),month=viewDate.getMonth(),first=new Date(year,month,1),start=new Date(year,month,1-first.getDay()),days=[];
-        for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);days.push(d)}
-        $('calendarDays').innerHTML=days.map(d=>{const key=iso(d),dayTasks=tasks.filter(t=>t.date===key),classes=['day'];if(d.getMonth()!==month)classes.push('muted');if(key===today)classes.push('today');if(key===selected)classes.push('selected');if(dayTasks.length)classes.push('has');if(dayTasks.length&&dayTasks.every(t=>t.done))classes.push('all-done');return `<button class="${classes.join(' ')}" data-date="${key}" aria-label="${key}${dayTasks.length?`、タスク${dayTasks.length}件`:''}">${d.getDate()}</button>`}).join('');
-        const dayTasks=tasks.filter(t=>t.date===selected);$('calendarNote').textContent=dayTasks.length?`${parse(selected).toLocaleDateString('ja-JP',{month:'long',day:'numeric'})}：タスク ${dayTasks.length} 件、完了 ${dayTasks.filter(t=>t.done).length} 件`:parse(selected).toLocaleDateString('ja-JP',{month:'long',day:'numeric'})+'：登録されたタスクはありません。';
-      }
-      function openModal(){ $('taskDate').value=selected;$('taskTitle').value='';$('taskMinutes').value=30;$('taskTag').value='';$('taskMemo').value='';$('modal').classList.add('open');$('taskTitle').focus() }
-      function closeModal(){ $('modal').classList.remove('open');$('addBtn').focus() }
-      $('addBtn').addEventListener('click',openModal);$('todayBtn').addEventListener('click',()=>{selected=today;viewDate=parse(today);render()});$('selectedDate').addEventListener('change',e=>{if(e.target.value){selected=e.target.value;viewDate=parse(selected);render()}});
-      $('prevMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()-1,1);render()});$('nextMonth').addEventListener('click',()=>{viewDate=new Date(viewDate.getFullYear(),viewDate.getMonth()+1,1);render()});
-      $('calendarDays').addEventListener('click',e=>{const b=e.target.closest('[data-date]');if(b){selected=b.dataset.date;viewDate=parse(selected);render()}});
-      $('taskList').addEventListener('change',e=>{const id=e.target.dataset.toggle;if(id){const task=tasks.find(t=>t.id===id);if(task){task.done=e.target.checked;persist();render()}}});
-      $('taskList').addEventListener('click',e=>{const id=e.target.closest('[data-delete]')?.dataset.delete;if(id){tasks=tasks.filter(t=>t.id!==id);persist();render()}});
-      $('taskForm').addEventListener('submit',e=>{e.preventDefault();const title=$('taskTitle').value.trim();if(!title)return;tasks.push({id:crypto.randomUUID?.()||String(Date.now()),title,date:$('taskDate').value||selected,minutes:Number($('taskMinutes').value)||0,tag:$('taskTag').value.trim(),memo:$('taskMemo').value.trim(),done:false,created:Date.now()});selected=$('taskDate').value||selected;persist();closeModal();render()});
-      $('closeModal').addEventListener('click',closeModal);$('cancelModal').addEventListener('click',closeModal);$('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modal').classList.contains('open'))closeModal()});
-      render();
-    })();
-  </script>
 </body>
 </html>
-
