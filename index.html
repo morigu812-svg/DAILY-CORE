@@ -1322,7 +1322,7 @@
 
   aria-hidden="true"
 
-\></iframe>
+></iframe>
 
 
 
@@ -1364,7 +1364,7 @@
 
   function localDateString(date) {
 
-    return \`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}\`;
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
 
   }
 
@@ -1418,7 +1418,7 @@
 
 
 
-      const id = \`${Date.now()}-${++requestCounter}\`;
+      const id = `${Date.now()}-${++requestCounter}`;
 
 
 
@@ -1428,7 +1428,7 @@
 
       try {
 
-        bridge.contentWindow\.postMessage({
+        bridge.contentWindow.postMessage({
 
           type: 'DAILY_CORE_REQUEST',
 
@@ -1476,7 +1476,7 @@
 
 
 
-  window\.addEventListener('message', event => {
+  window.addEventListener('message', event => {
 
     if (event.source !== bridge.contentWindow) return;
 
@@ -1576,7 +1576,7 @@
 
     const weekday = ['日','月','火','水','木','金','土'][new Date(y,m-1,d).getDay()];
 
-    return \`${y}年${m}月${d}日（${weekday}）\`;
+    return `${y}年${m}月${d}日（${weekday}）`;
 
   }
 
@@ -1592,11 +1592,11 @@
 
 
 
-    if (hours && mins) return \`${hours}時間${mins}分\`;
+    if (hours && mins) return `${hours}時間${mins}分`;
 
-    if (hours) return \`${hours}時間\`;
+    if (hours) return `${hours}時間`;
 
-    return \`${mins}分\`;
+    return `${mins}分`;
 
   }
 
@@ -1688,9 +1688,9 @@
 
 
 
-    $('statTotal').innerHTML = \`${total} <small>件</small>\`;
+    $('statTotal').innerHTML = `${total} <small>件</small>`;
 
-    $('statCompleted').innerHTML = \`${completed} <small>件</small>\`;
+    $('statCompleted').innerHTML = `${completed} <small>件</small>`;
 
     $('statRate').textContent = rate + '%';
 
@@ -1710,7 +1710,7 @@
 
     } else {
 
-      $('focusText').textContent = \`あと ${total-completed} 件。ひとつずつ進めていこう。\`;
+      $('focusText').textContent = `あと ${total-completed} 件。ひとつずつ進めていこう。`;
 
     }
 
@@ -1742,7 +1742,7 @@
 
       const due = task.dueDate
 
-        ? \`<span class="tag ${!task.completed && task.dueDate < today ? 'overdue' : ''}">期限：${escapeHtml(task.dueDate)}</span>\`
+        ? `<span class="tag ${!task.completed && task.dueDate < today ? 'overdue' : ''}">期限：${escapeHtml(task.dueDate)}</span>`
 
         : '';
 
@@ -1750,7 +1750,7 @@
 
       const duration = Number(task.duration) > 0
 
-        ? \`<span class="tag">予定：${escapeHtml(formatDuration(task.duration))}</span>\`
+        ? `<span class="tag">予定：${escapeHtml(formatDuration(task.duration))}</span>`
 
         : '';
 
@@ -1758,13 +1758,13 @@
 
       const memo = task.memo
 
-        ? \`<div class="task-memo">${escapeHtml(task.memo)}</div>\`
+        ? `<div class="task-memo">${escapeHtml(task.memo)}</div>`
 
         : '';
 
 
 
-      return \`<article class="task ${task.completed?'is-complete':''}" data-id="${escapeHtml(task.id)}">
+      return `<article class="task ${task.completed?'is-complete':''}" data-id="${escapeHtml(task.id)}">
 
         <input class="task-check" type="checkbox" aria-label="${escapeHtml(task.title)}を完了にする" ${task.completed?'checked':''}>
 
@@ -1794,7 +1794,7 @@
 
         </div>
 
-      </article>\`;
+      </article>`;
 
     }).join('');
 
@@ -1870,7 +1870,7 @@
 
     const [year,month] = state.selectedDate.split('-').map(Number);
 
-    $('monthLabel').textContent = \`${year}年${month}月\`;
+    $('monthLabel').textContent = `${year}年${month}月`;
 
 
 
@@ -1920,7 +1920,7 @@
 
       cells.push(
 
-        \`<button type="button" class="${classes.join(' ')}" data-date="${key}" aria-label="${key}" aria-pressed="${key===state.selectedDate}">${date.getDate()}</button>\`
+        `<button type="button" class="${classes.join(' ')}" data-date="${key}" aria-label="${key}" aria-pressed="${key===state.selectedDate}">${date.getDate()}</button>`
 
       );
 
@@ -2022,7 +2022,7 @@
 
         updateDashboard(await serverCall('getDashboardData', state.selectedDate));
 
-      } catch (\_) {
+      } catch (_) {
 
         if (previousCompleted !== null) {
 
@@ -2050,7 +2050,7 @@
 
   async function removeTask(task) {
 
-    if (state.busy || !confirm(\`「${task.title}」を削除しますか？\`)) return;
+    if (state.busy || !confirm(`「${task.title}」を削除しますか？`)) return;
 
 
 
