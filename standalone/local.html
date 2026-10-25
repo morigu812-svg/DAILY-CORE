@@ -12,13 +12,13 @@
     @media(max-width:800px){.shell{padding:20px 18px 38px}.topbar{margin-bottom:38px}.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}.calendar-panel{order:2}}
     @media(max-width:480px){.shell{padding:16px 13px 32px}.topbar{margin-bottom:30px}.brandmark{width:40px;height:40px}.brand strong{font-size:12px}.mode{padding:7px 9px;font-size:9px}.stats{gap:9px}.stat{padding:15px;min-height:108px;border-radius:16px}.stat-number{font-size:25px}.panel{padding:16px;border-radius:17px}.panel-head{align-items:flex-start}.actions .btn{padding:8px 10px}.field-row{grid-template-columns:1fr}.hero h1{font-size:29px}}
   
-    .wave-loader{align-items:center;justify-content:center;gap:6px;min-height:112px;padding:20px 12px;color:var(--muted);flex-wrap:wrap}
-    .wave-loader:not([hidden]){display:flex}
-    .wave-loader span{display:block;width:5px;height:22px;border-radius:99px;background:linear-gradient(180deg,var(--cyan),var(--violet));animation:task-wave 1s ease-in-out infinite;transform-origin:center}
-    .wave-loader span:nth-child(2){animation-delay:.1s}.wave-loader span:nth-child(3){animation-delay:.2s}.wave-loader span:nth-child(4){animation-delay:.3s}.wave-loader span:nth-child(5){animation-delay:.4s}
-    .wave-loader em{flex-basis:100%;text-align:center;font-style:normal;font-size:12px}
-    @keyframes task-wave{0%,100%{transform:scaleY(.4);opacity:.55}50%{transform:scaleY(1.35);opacity:1}}
-    @media(prefers-reduced-motion:reduce){.wave-loader span{animation:none;transform:none;opacity:.85}}
+    .wave-loader{position:relative;overflow:hidden;min-height:112px;padding:20px 12px;border-radius:14px;background:var(--panel);color:var(--muted)}
+    .wave-loader:not([hidden]){display:block}
+    .shimmer-line{height:13px;border-radius:8px;margin:0 auto 10px;background:linear-gradient(90deg,rgba(130,145,165,.09) 0%,rgba(130,145,165,.16) 35%,rgba(255,255,255,.38) 50%,rgba(130,145,165,.16) 65%,rgba(130,145,165,.09) 100%);background-size:220% 100%;animation:task-shimmer 1.45s ease-in-out infinite}
+    .shimmer-line:nth-child(1){width:92%}.shimmer-line:nth-child(2){width:78%}.shimmer-line:nth-child(3){width:86%}
+    .shimmer-caption{text-align:center;font-size:12px;margin-top:14px}
+    @keyframes task-shimmer{0%{background-position:100% 0}100%{background-position:-120% 0}}
+    @media(prefers-reduced-motion:reduce){.shimmer-line{animation:none;background-position:50% 0}}
 
   </style>
 </head>
@@ -41,7 +41,7 @@
         <div class="panel-head"><div><h2>タスク一覧</h2><div class="sub" id="listSub">選択した日付のタスク</div></div><button class="btn primary" id="addBtn">＋ 追加</button></div>
         <div class="date-row"><label class="sr-only" for="selectedDate">表示する日付</label><input id="selectedDate" type="date"><button class="btn ghost" id="todayBtn">今日</button></div>
         <div class="task-list" id="taskList"></div>
-        <div class="wave-loader" id="taskListLoader" role="status" aria-live="polite" aria-label="タスク一覧を読み込み中" hidden><span></span><span></span><span></span><span></span><span></span><em>タスク一覧を読み込み中</em></div>
+        <div class="wave-loader" id="taskListLoader" role="status" aria-live="polite" aria-label="タスク一覧を読み込み中" hidden><div class="shimmer-line"></div><div class="shimmer-line"></div><div class="shimmer-line"></div><div class="shimmer-caption">タスク一覧を読み込み中</div></div>
         <div class="focus"><div class="focus-label">次に取り組むタスク</div><div class="focus-text" id="focusText">小さな一歩を積み重ねよう。</div></div>
       </section>
       <aside class="panel calendar-panel">
