@@ -24,7 +24,9 @@
 
   window.addEventListener('message', event => {
     if (event.origin !== ALLOWED_ORIGIN) return;
-    if (event.source !== window.top) return;
+    // GAS HtmlService が内部フレームを挟む場合、送信元が top ではなく parent になることがある。
+    // origin とメッセージ形式を検証し、top / parent のどちらからの正規リクエストも受け付ける。
+    if (event.source !== window.top && event.source !== window.parent) return;
 
     const request = event.data;
     if (!request || request.type !== 'DAILY_CORE_REQUEST') return;
