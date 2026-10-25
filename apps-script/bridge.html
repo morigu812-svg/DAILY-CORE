@@ -66,9 +66,25 @@
     }
   });
 
-  window.addEventListener('load', () => {
-    window.parent.postMessage({ type: 'DAILY_CORE_BRIDGE_READY' }, ALLOWED_ORIGIN);
-  });
+  // 親ページがリスナーを登録するタイミングに左右されないよう、準備完了通知を数回送る。
+  // タスクデータやスプレッドシートには触れない。
+  function announceReady() {
+    try {
+      window.parent.postMessage({ type: 'DAILY_CORE_BRIDGE_READY' }, ALLOWED_ORIGIN);
+    } catch (error) {
+      // 通知の失敗は次の通知で再試行する。
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', announceReady, { once: true });
+  window.addEventListener('load', announceReady, { once: true });
+  announceReady();
+  let readyAttempts = 0;
+  const readyTimer = window.setInterval(() => {
+    announceReady();
+    readyAttempts += 1;
+    if (readyAttempts >= 10) window.clearInterval(readyTimer);
+  }, 500);
 })();
 </script>
 </body>
