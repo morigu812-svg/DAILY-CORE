@@ -19,12 +19,12 @@
   ]);
 
   function send(target, message) {
-    target.postMessage(message, ALLOWED_ORIGIN);
+    window.top.postMessage(message, ALLOWED_ORIGIN);
   }
 
   window.addEventListener('message', event => {
     if (event.origin !== ALLOWED_ORIGIN) return;
-    if (event.source !== window.parent) return;
+    if (event.source !== window.top) return;
 
     const request = event.data;
     if (!request || request.type !== 'DAILY_CORE_REQUEST') return;
@@ -70,7 +70,7 @@
   // タスクデータやスプレッドシートには触れない。
   function announceReady() {
     try {
-      window.parent.postMessage({ type: 'DAILY_CORE_BRIDGE_READY' }, ALLOWED_ORIGIN);
+      window.top.postMessage({ type: 'DAILY_CORE_BRIDGE_READY' }, ALLOWED_ORIGIN);
     } catch (error) {
       // 通知の失敗は次の通知で再試行する。
     }
