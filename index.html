@@ -25,7 +25,17 @@ const state={tasks:[],selectedDate:todayString(),busy:false,calendarMonth:todayS
 const bridgeState={ready:false,waiters:[],pending:new Map(),nextId:0};
 function call(method,...args){return new Promise((resolve,reject)=>{const id='req-'+Date.now()+'-'+(++bridgeState.nextId);const timer=setTimeout(()=>{bridgeState.pending.delete(id);reject(new Error(bridgeState.ready?'GASブリッジは起動しましたが、GAS関数から40秒以内に応答がありません。':'GASブリッジの準備完了通知が届いていません。公開中のGASデプロイがbridge.htmlを返しているか確認が必要です。'))},40000);bridgeState.pending.set(id,{resolve,reject,timer});const send=()=>{const frame=document.getElementById('gasBridge');if(!frame||!frame.contentWindow){clearTimeout(timer);bridgeState.pending.delete(id);reject(new Error('GASブリッジを開けませんでした。'));return}frame.contentWindow.postMessage({type:'DAILY_CORE_REQUEST',id,method,args},'*')};if(bridgeState.ready)send();else bridgeState.waiters.push(send)})}
 const bridgeFrame=document.getElementById('gasBridge');
-bridgeFrame.addEventListener('load',()=>{bridgeState.ready=true;bridgeState.waiters.splice(0).forEach(fn=>fn());});
+let bridgeBootStarted=false;
+bridgeFrame.addEventListener('load',()=>{
+  // iframe の読み込みが完了してから初回データ取得を開始する。
+  // 先に load() を呼んで中間フレームへ送信してしまうのを避ける。
+  bridgeState.ready=true;
+  bridgeState.waiters.splice(0).forEach(fn=>fn());
+  if(!bridgeBootStarted){
+    bridgeBootStarted=true;
+    load();
+  }
+});
 window.addEventListener('message',event=>{const msg=event.data;if(!msg||typeof msg!=='object')return;const trustedBridgeOrigin=event.origin==='https://script.google.com'||event.origin.endsWith('.googleusercontent.com');if(!trustedBridgeOrigin)return;if(msg.type==='DAILY_CORE_BRIDGE_READY'){bridgeState.ready=true;bridgeState.waiters.splice(0).forEach(fn=>fn());return}if(msg.type==='DAILY_CORE_RESPONSE'&&typeof msg.id==='string'){const p=bridgeState.pending.get(msg.id);if(!p)return;clearTimeout(p.timer);bridgeState.pending.delete(msg.id);if(msg.ok)p.resolve(msg.result);else p.reject(new Error(msg.error||'GASでエラーが発生しました'))}});
 function status(msg,type){$('status').textContent=msg;$('status').className='status '+(type||'')}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -46,5 +56,5 @@ $('day').value=state.selectedDate;clearForm();
 // メッセージ受信リスナー登録後に一度だけブリッジを再読み込みし、READY通知の取りこぼしを防ぐ。
 // これは起動時のみ実行し、GAS関数の応答後には再読み込みしない。
 bridgeFrame.src = bridgeFrame.src;
-load();
+// 初回 load() は iframe の load イベント内から実行する。
 </script></body></html>
