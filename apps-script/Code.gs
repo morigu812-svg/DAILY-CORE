@@ -170,7 +170,7 @@ function getDashboardData(date) {
   return { selectedDate: selected, tasks: tasks, monthTasks: monthTasks, startTime: getDailyStartTime_(selected) };
 }
 
-function saveTask(input) {
+function saveTask(input, selectedDate) {
   if (!input || typeof input !== 'object') throw new Error('タスクの入力内容がありません。');
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
@@ -206,7 +206,7 @@ function saveTask(input) {
       '推定所要時間（分）': duration, '重要度': importance, 'ロングタスク': longTask
     };
     Object.keys(values).forEach(h => sheet.getRange(targetRow, columns[h]).setValue(values[h]));
-    return getDashboardData(date);
+    return getDashboardData(selectedDate ? validateDate_(selectedDate, '対象日') : date);
   } finally {
     lock.releaseLock();
   }
