@@ -19,11 +19,20 @@
   ]);
 
   function send(target, message) {
-    // 応答はリクエストを送ってきたウィンドウへ返す。
-    // GAS の内部フレーム構成により top と parent が異なる場合に備える。
-    if (target && typeof target.postMessage === 'function') {
-      target.postMessage(message, ALLOWED_ORIGIN);
-    }
+    // GAS HtmlService は内部フレームを挟む場合がある。
+    // event.source と top の両方へ返し、実際に親ページへ届く経路を確保する。
+    // 同じ応答が二重に届いても、親ページ側は pending ID で一度だけ処理する。
+    const targets = [target, window.top];
+    const sent = new Set();
+    targets.forEach(destination => {
+      if (!destination || sent.has(destination) || typeof destination.postMessage !== 'function') return;
+      sent.add(destination);
+      try {
+        destination.postMessage(message, ALLOWED_ORIGIN);
+      } catch (error) {
+        // もう一方の宛先への送信を続ける。
+      }
+    });
   }
 
   window.addEventListener('message', event => {
