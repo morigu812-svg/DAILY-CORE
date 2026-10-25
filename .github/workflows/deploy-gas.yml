@@ -1,0 +1,38 @@
+name: Deploy DAILY CORE to Google Apps Script
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps-script/**'
+      - '.github/workflows/deploy-gas.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install clasp
+        run: npm install -g @google/clasp
+
+      - name: Configure Apps Script credentials
+        env:
+          CLASP_CREDENTIALS: ${{ secrets.CLASP_CREDENTIALS }}
+          GAS_SCRIPT_ID: ${{ secrets.GAS_SCRIPT_ID }}
+        run: |
+          test -n "$CLASP_CREDENTIALS" || (echo 'Missing repository secret CLASP_CREDENTIALS' && exit 1)
+          test -n "$GAS_SCRIPT_ID" || (echo 'Missing repository secret GAS_SCRIPT_ID' && exit 1)
+          mkdir -p "$HOME"
+          printf '%s' "$CLASP_CREDENTIALS" > "$HOME/.clasprc.json"
+          printf '{"scriptId":"%s","rootDir":"apps-script"}\n' "$GAS_SCRIPT_ID" > .clasp.json
+
+      - name: Push source to Google Apps Script
+        run: clasp push --force
