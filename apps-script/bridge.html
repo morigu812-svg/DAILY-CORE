@@ -19,14 +19,18 @@
   ]);
 
   function send(target, message) {
-    window.top.postMessage(message, ALLOWED_ORIGIN);
+    // 応答はリクエストを送ってきたウィンドウへ返す。
+    // GAS の内部フレーム構成により top と parent が異なる場合に備える。
+    if (target && typeof target.postMessage === 'function') {
+      target.postMessage(message, ALLOWED_ORIGIN);
+    }
   }
 
   window.addEventListener('message', event => {
     if (event.origin !== ALLOWED_ORIGIN) return;
-    // GAS HtmlService が内部フレームを挟む場合、送信元が top ではなく parent になることがある。
-    // origin とメッセージ形式を検証し、top / parent のどちらからの正規リクエストも受け付ける。
-    if (event.source !== window.top && event.source !== window.parent) return;
+    // GAS HtmlService が内部フレームを挟むことがあるため、event.source の比較では拒否しない。
+    // ALLOWED_ORIGIN とリクエスト形式・許可メソッドを検証して受け付ける。
+    if (!event.source || typeof event.source.postMessage !== 'function') return;
 
     const request = event.data;
     if (!request || request.type !== 'DAILY_CORE_REQUEST') return;
