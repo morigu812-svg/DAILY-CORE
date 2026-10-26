@@ -120,7 +120,7 @@ function taskVisibleOnDate_(task, date) {
   const start = task.date || task.dueDate;
   const due = task.dueDate || task.date;
   if (!start || !due || due < start) return date === start;
-  if (task.longTask) return date >= start && date <= due;
+  if (task.longTask) return date === due;
   return date === due;
 }
 
