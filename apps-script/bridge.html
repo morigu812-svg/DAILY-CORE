@@ -10,7 +10,10 @@
 (() => {
   'use strict';
 
-  const ALLOWED_ORIGIN = 'https://morigu812-svg.github.io';
+  const ALLOWED_ORIGINS = new Set([
+    'https://morigu812-svg.github.io',
+    'https://daily-core.onrender.com'
+  ]);
   const ALLOWED_METHODS = new Set([
     'getDashboardData',
     'saveTask',
@@ -18,7 +21,7 @@
     'saveDailyStartTime'
   ]);
 
-  function send(target, message) {
+  function send(target, message, targetOrigin) {
     // GAS HtmlService は内部フレームを挟む場合がある。
     // event.source と top の両方へ返し、実際に親ページへ届く経路を確保する。
     // 同じ応答が二重に届いても、親ページ側は pending ID で一度だけ処理する。
@@ -28,7 +31,7 @@
       if (!destination || sent.has(destination) || typeof destination.postMessage !== 'function') return;
       sent.add(destination);
       try {
-        destination.postMessage(message, ALLOWED_ORIGIN);
+        destination.postMessage(message, targetOrigin);
       } catch (error) {
         // もう一方の宛先への送信を続ける。
       }
@@ -36,7 +39,7 @@
   }
 
   window.addEventListener('message', event => {
-    if (event.origin !== ALLOWED_ORIGIN) return;
+    if (!ALLOWED_ORIGINS.has(event.origin)) return;
     // GAS HtmlService が内部フレームを挟むことがあるため、event.source の比較では拒否しない。
     // ALLOWED_ORIGIN とリクエスト形式・許可メソッドを検証して受け付ける。
     if (!event.source || typeof event.source.postMessage !== 'function') return;
@@ -51,7 +54,7 @@
         id,
         ok: false,
         error: '不正なリクエストです。'
-      });
+      }, event.origin);
       return;
     }
 
@@ -62,13 +65,13 @@
           id,
           ok: true,
           result
-        }))
+        }, event.origin))
         .withFailureHandler(error => send(event.source, {
           type: 'DAILY_CORE_RESPONSE',
           id,
           ok: false,
           error: error && error.message ? error.message : String(error)
-        }));
+        }, event.origin));
 
       runner[method](...args);
     } catch (error) {
@@ -77,7 +80,7 @@
         id,
         ok: false,
         error: error && error.message ? error.message : String(error)
-      });
+      }, event.origin);
     }
   });
 
@@ -85,7 +88,9 @@
   // タスクデータやスプレッドシートには触れない。
   function announceReady() {
     try {
-      window.top.postMessage({ type: 'DAILY_CORE_BRIDGE_READY' }, ALLOWED_ORIGIN);
+      ALLOWED_ORIGINS.forEach(origin => {
+        window.top.postMessage({ type: 'DAILY_CORE_BRIDGE_READY' }, origin);
+      });
     } catch (error) {
       // 通知の失敗は次の通知で再試行する。
     }
