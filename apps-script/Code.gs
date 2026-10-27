@@ -108,8 +108,9 @@ function rowToTask_(row, columns) {
   };
 }
 
-function getAllTasks_() {
-  const sheet = ensureSheet_(), columns = getColumnMap_(sheet), lastRow = sheet.getLastRow();
+function getAllTasks_(sheet) {
+  sheet = sheet || ensureSheet_();
+  const columns = getColumnMap_(sheet), lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
   return sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).getValues()
     .filter(row => row[columns.ID - 1] !== '')
@@ -129,18 +130,21 @@ function getTasks(date) {
   return getAllTasks_().filter(task => taskVisibleOnDate_(task, selected));
 }
 
-function getMonthTasks(year, month) {
-  const y = Number(year), m = Number(month);
-  if (!Number.isInteger(y) || !Number.isInteger(m) || m < 1 || m > 12) throw new Error('年月が正しくありません。');
-  const prefix = String(y).padStart(4, '0') + '-' + String(m).padStart(2, '0');
-  const all = getAllTasks_(), result = {};
-  const lastDay = new Date(y, m, 0).getDate();
+function buildMonthTasks_(all, year, month) {
+  const prefix = String(year).padStart(4, '0') + '-' + String(month).padStart(2, '0');
+  const result = {}, lastDay = new Date(year, month, 0).getDate();
   for (let day = 1; day <= lastDay; day++) {
     const date = prefix + '-' + String(day).padStart(2, '0');
     const visible = all.filter(task => taskVisibleOnDate_(task, date));
     if (visible.length) result[date] = visible;
   }
   return result;
+}
+
+function getMonthTasks(year, month) {
+  const y = Number(year), m = Number(month);
+  if (!Number.isInteger(y) || !Number.isInteger(m) || m < 1 || m > 12) throw new Error('年月が正しくありません。');
+  return buildMonthTasks_(getAllTasks_(), y, m);
 }
 
 function getDailyStartTime_(date) {
@@ -158,14 +162,13 @@ function saveDailyStartTime(date, time) {
 
 function getDashboardData(date) {
   const selected = date ? validateDate_(date, '対象日') : Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  const all = getAllTasks_();
-  const monthPrefix = selected.slice(0, 7), monthTasks = {};
-  const lastDay = new Date(Number(selected.slice(0, 4)), Number(selected.slice(5, 7)), 0).getDate();
-  for (let day = 1; day <= lastDay; day++) {
-    const dateKey = monthPrefix + '-' + String(day).padStart(2, '0');
-    const visible = all.filter(task => taskVisibleOnDate_(task, dateKey));
-    if (visible.length) monthTasks[dateKey] = visible;
-  }
+  return buildDashboardData_(selected, ensureSheet_());
+}
+
+function buildDashboardData_(selected, sheet) {
+  const all = getAllTasks_(sheet);
+  const year = Number(selected.slice(0, 4)), month = Number(selected.slice(5, 7));
+  const monthTasks = buildMonthTasks_(all, year, month);
   const tasks = all.filter(task => taskVisibleOnDate_(task, selected));
   return { selectedDate: selected, tasks: tasks, monthTasks: monthTasks, startTime: getDailyStartTime_(selected) };
 }
@@ -205,8 +208,13 @@ function saveTask(input, selectedDate) {
       'メモ': memo, '作成日時': createdAt, '更新日時': now,
       '推定所要時間（分）': duration, '重要度': importance, 'ロングタスク': longTask
     };
-    Object.keys(values).forEach(h => sheet.getRange(targetRow, columns[h]).setValue(values[h]));
-    return getDashboardData(selectedDate ? validateDate_(selectedDate, '対象日') : date);
+    const firstColumn = Math.min.apply(null, HEADERS.map(h => columns[h]));
+    const lastColumn = Math.max.apply(null, HEADERS.map(h => columns[h]));
+    const rowValues = sheet.getRange(targetRow, firstColumn, 1, lastColumn - firstColumn + 1).getValues()[0];
+    Object.keys(values).forEach(h => { rowValues[columns[h] - firstColumn] = values[h]; });
+    sheet.getRange(targetRow, firstColumn, 1, rowValues.length).setValues([rowValues]);
+    const selected = selectedDate ? validateDate_(selectedDate, '対象日') : date;
+    return buildDashboardData_(selected, sheet);
   } finally {
     lock.releaseLock();
   }
