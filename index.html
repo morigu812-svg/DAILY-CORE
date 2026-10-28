@@ -86,7 +86,8 @@ function render(d){
   const taskList=all.filter(t=>!t.longTask||(state.selectedDate===(t.dueDate||t.date)));
   const longTaskList=all.filter(t=>t.longTask&&state.selectedDate>=(t.date||t.dueDate)&&state.selectedDate<=(t.dueDate||t.date));
   const sum=list=>list.reduce((s,t)=>s+(Number(t.duration)||0),0);
-  const total=sum(taskList),done=sum(taskList.filter(t=>t.completed)),pendingM=total-done,rate=total?Math.round(done/total*100):0;
+  const progressTasks=all.filter(t=>!t.longTask);
+  const total=sum(progressTasks),done=sum(progressTasks.filter(t=>t.completed)),pendingM=total-done,rate=total?Math.round(done/total*100):0;
   $('remaining').textContent=taskList.filter(t=>!t.completed).length;$('taskCount').textContent=taskList.length+'件';$('longTaskCount').textContent=longTaskList.length+'件';
   $('rate').textContent=rate+'%';$('minutes').textContent=mins(pendingM);$('progress').style.width=rate+'%';
   renderTaskList('tasks',taskList,'この日付のタスクはありません。追加してみよう。');
