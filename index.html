@@ -13,27 +13,107 @@
 .shimmer-line.short{width:38%}.shimmer-line.medium{width:65%}.shimmer-task{padding:16px;min-height:112px}
 .shimmer-tag{display:inline-block;width:90px;height:22px;border-radius:99px;margin:8px 6px 0 0;background:linear-gradient(100deg,#172232 25%,#34475e 38%,#172232 55%);background-size:200% 100%;animation:shimmer 1.45s ease-in-out infinite}.spinner{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;vertical-align:-2px;margin-right:7px;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.status.loading::before{content:"";display:inline-block;width:12px;height:12px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;margin-right:8px;vertical-align:-2px;animation:spin .8s linear infinite}button:disabled{opacity:.7;cursor:wait}
 @media(prefers-reduced-motion:reduce){.shimmer,.shimmer-line,.shimmer-tag{animation:none;background:#1b293b}}
-</style></head><body>
+.clock-settings{width:min(440px,calc(100% - 32px));color:var(--text)}.clock-settings::backdrop{background:#02050bd9}.clock-settings-button{margin-top:10px;padding:5px 8px;font-size:12px}</style></head><body>
 <iframe id="gasBridge" title="GAS通信ブリッジ" src="https://script.google.com/macros/s/AKfycbyzDjKQJyiKrVh3lpoariDTu0eeJjX-JU2tir2jNbOfk5mDyEyJHz3iFawAXU7_YkXY/exec?mode=bridge&v=20261026c" style="position:absolute;width:1px;height:1px;left:-10000px;border:0" aria-hidden="true"></iframe><main>
 <header class="top"><div><div class="brand">◈ DAILY CORE</div><div class="muted" style="font-size:11px;letter-spacing:2px;margin-top:5px">PERSONAL TASK SYSTEM</div></div><div class="row"><span class="muted" id="connection">接続確認中…</span><button id="reload">再読み込み</button></div></header>
 <h1>タスク管理</h1><div class="muted">期限・重要度・所要時間をまとめて管理する。</div>
-<section class="stats"><div class="stat"><small>未完了タスク</small><div class="num" id="remaining">—</div></div><div class="stat"><small>完了率（所要時間ベース）</small><div class="num" id="rate">—</div><div class="bar"><span id="progress"></span></div></div><div class="stat"><small>未完了の推定時間</small><div class="num" id="minutes">—</div></div><div class="stat clock-stat"><small>現在時刻</small><div class="num" id="clock">--:--</div><div class="clock-meta"><span id="dayProgressWindow"></span><strong id="dayProgressLabel">0%</strong></div><div class="bar"><span id="dayProgress"></span></div></div></section>
+<section class="stats"><div class="stat"><small>未完了タスク</small><div class="num" id="remaining">—</div></div><div class="stat"><small>完了率（所要時間ベース）</small><div class="num" id="rate">—</div><div class="bar"><span id="progress"></span></div></div><div class="stat"><small>未完了の推定時間</small><div class="num" id="minutes">—</div></div><div class="stat clock-stat"><small>現在時刻</small><div class="num" id="clock">--:--</div><div class="clock-meta"><span id="dayProgressWindow"></span><strong id="dayProgressLabel">0%</strong></div><div class="bar"><span id="dayProgress"></span></div><button type="button" id="openClockSettings" class="clock-settings-button">計算時間を設定</button></div></section>
 <div class="layout"><div class="left-panels"><details class="panel task-panel collapsible-panel" open><summary class="panel-summary"><span>タスクリスト <span id="taskCount" class="count-badge">0件</span></span><span class="panel-summary-note">選択した日付のタスクを表示</span></summary><div class="row task-toolbar"><button class="primary" id="add">＋ タスク追加</button></div><label for="day">表示日</label><div class="row"><input type="date" id="day" style="max-width:210px"><button id="today">今日</button></div><div id="tasks" class="tasks"><div class="empty">タスクを読み込み中…</div></div><div id="status" class="status" role="status"></div></details><details class="panel longtasks-panel collapsible-panel"><summary class="panel-summary"><span>ロングタスク一覧 <span id="longTaskCount" class="count-badge">0件</span></span><span class="panel-summary-note">選択した日が期間内のロングタスク</span></summary><div id="longTasks" class="tasks"><div class="empty">ロングタスクを読み込み中…</div></div></details></div><aside class="panel calendar-panel"><div class="row"><button id="prevMonth" aria-label="前の月">‹</button><strong id="calendarTitle">カレンダー</strong><button id="nextMonth" aria-label="次の月">›</button></div><div id="calendar" class="calendar"></div><div class="muted" style="font-size:11px;margin-top:12px">日付を選ぶと、その日のタスクを表示します。</div></aside><div id="taskDialog" class="dialog" hidden><div class="dialog-backdrop" data-close-dialog></div><section class="dialog-card panel" role="dialog" aria-modal="true" aria-labelledby="formTitle"><div class="row"><strong id="formTitle">タスクを追加</strong><button type="button" id="closeDialog" aria-label="閉じる">✕</button></div><form id="form"><input type="hidden" id="id"><label for="date">開始日</label><input id="date" type="date" required><label for="title">タスク名</label><input id="title" maxlength="180" required placeholder="例：数学の問題集"><div class="formgrid"><div><label for="due">期限日</label><input id="due" type="date" required></div><div><label for="duration">推定時間（分）</label><input id="duration" type="number" min="0" step="1" value="30" required></div><div class="wide"><label for="importance">重要度</label><select id="importance"><option value="3">高</option><option value="2" selected>中</option><option value="1">低</option></select></div><div class="wide"><label class="check"><input id="long" type="checkbox"> ロングタスク（複数日にまたがる）</label></div><div class="wide"><label for="memo">メモ</label><textarea id="memo" rows="3" placeholder="補足や手順など"></textarea></div></div><div class="actions"><button class="primary" type="submit">保存</button><button type="button" id="cancel">クリア</button></div></form></section></div></div></main>
+<dialog id="clockSettings" class="panel clock-settings" aria-labelledby="clockSettingsTitle">
+  <div class="row"><strong id="clockSettingsTitle">日付ごとの計算時間</strong><button type="button" id="closeClockSettings">閉じる</button></div>
+  <form id="clockSettingsForm">
+    <label for="clockDate">対象日</label>
+    <input type="date" id="clockDate" required>
+    <div class="formgrid">
+      <div><label for="clockStart">開始時刻</label><input id="clockStart" placeholder="7:30" required aria-describedby="clockTimeHint"></div>
+      <div><label for="clockEnd">終了時刻</label><input id="clockEnd" placeholder="24:00" required aria-describedby="clockTimeHint"></div>
+    </div>
+    <p id="clockTimeHint" class="muted">24時間表記で入力してください。終了時刻には24:00も使えます。設定はこのブラウザに保存されます。</p>
+    <div class="row"><button type="submit" class="primary">保存</button><button type="button" id="resetClockSettings">曜日の設定に戻す</button></div>
+    <div id="clockSettingsStatus" class="status" role="status"></div>
+  </form>
+</dialog>
 <script>
 const $=id=>document.getElementById(id);
-function todayString(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function todayString(d=new Date()){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+const clockStoragePrefix='daily-core.clock-window.';
+function defaultClockWindow(date){
+  const day=new Date(date+'T00:00:00').getDay();
+  return day===0||day===6?[450,1440]:[1200,1380];
+}
+function validClockWindow(start,end){
+  return Number.isInteger(start)&&Number.isInteger(end)&&start>=0&&start<end&&end<=1440;
+}
+function clockWindow(date){
+  try{
+    const saved=JSON.parse(localStorage.getItem(clockStoragePrefix+date));
+    if(Array.isArray(saved)&&validClockWindow(...saved))return saved;
+  }catch{
+    // 日付別の設定を読み込めない場合は、曜日の設定を使う。
+  }
+  return defaultClockWindow(date);
+}
+function formatClockMinutes(minutes){
+  return Math.floor(minutes/60)+':'+String(minutes%60).padStart(2,'0');
+}
+function parseClockMinutes(value){
+  const match=/^(\d{1,2}):([0-5]\d)$/.exec(value.trim());
+  return match?Number(match[1])*60+Number(match[2]):NaN;
+}
 function updateClock(){
-  const now=new Date(),day=now.getDay(),h=now.getHours(),m=now.getMinutes();
-  const weekend=day===0||day===6;
-  const start=weekend?7*60+30:20*60;
-  const end=weekend?24*60:23*60;
+  const now=new Date(),h=now.getHours(),m=now.getMinutes();
+  const [start,end]=clockWindow(todayString(now));
   const minutes=h*60+m;
   const percent=Math.max(0,Math.min(100,(minutes-start)/(end-start)*100));
   $('clock').textContent=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-  $('dayProgressWindow').textContent=weekend?'7:30〜24:00の経過':'20:00〜23:00の経過';
+  $('dayProgressWindow').textContent=formatClockMinutes(start)+'〜'+formatClockMinutes(end)+'の経過';
   $('dayProgressLabel').textContent=Math.round(percent)+'%';
   $('dayProgress').style.width=percent+'%';
 }
+function loadClockSettings(){
+  const date=$('clockDate').value;
+  const [start,end]=date?clockWindow(date):[];
+  $('clockStart').value=date?formatClockMinutes(start):'';
+  $('clockEnd').value=date?formatClockMinutes(end):'';
+  $('clockSettingsStatus').textContent='';
+}
+$('openClockSettings').addEventListener('click',()=>{
+  $('clockDate').value=todayString();
+  loadClockSettings();
+  $('clockSettings').showModal();
+});
+$('closeClockSettings').addEventListener('click',()=>$('clockSettings').close());
+$('clockDate').addEventListener('change',loadClockSettings);
+$('clockSettingsForm').addEventListener('submit',event=>{
+  event.preventDefault();
+  const start=parseClockMinutes($('clockStart').value);
+  const end=parseClockMinutes($('clockEnd').value);
+  if(!validClockWindow(start,end)){
+    $('clockSettingsStatus').textContent='開始時刻より後の終了時刻を入力してください（例 7:30〜24:00）。';
+    return;
+  }
+  try{
+    localStorage.setItem(clockStoragePrefix+$('clockDate').value,JSON.stringify([start,end]));
+  }catch{
+    $('clockSettingsStatus').textContent='設定を保存できませんでした。';
+    return;
+  }
+  updateClock();
+  $('clockSettingsStatus').textContent='この日付の設定を保存しました。';
+});
+$('resetClockSettings').addEventListener('click',()=>{
+  const date=$('clockDate');
+  if(!date.reportValidity())return;
+  try{
+    localStorage.removeItem(clockStoragePrefix+date.value);
+  }catch{
+    $('clockSettingsStatus').textContent='設定を解除できませんでした。';
+    return;
+  }
+  loadClockSettings();
+  updateClock();
+  $('clockSettingsStatus').textContent='曜日の設定に戻しました。';
+});
 const state={tasks:[],selectedDate:todayString(),busy:false,calendarMonth:todayString().slice(0,7),monthTasks:{}};
 const bridgeState={ready:false,waiters:[],pending:new Map(),nextId:0};
 function call(method,...args){return new Promise((resolve,reject)=>{const id='req-'+Date.now()+'-'+(++bridgeState.nextId);const timer=setTimeout(()=>{bridgeState.pending.delete(id);reject(new Error(bridgeState.ready?'GASブリッジは起動しましたが、GAS関数から40秒以内に応答がありません。':'GASブリッジの準備完了通知が届いていません。公開中のGASデプロイがbridge.htmlを返しているか確認が必要です。'))},40000);bridgeState.pending.set(id,{resolve,reject,timer});const send=()=>{const frame=document.getElementById('gasBridge');if(!frame||!frame.contentWindow){clearTimeout(timer);bridgeState.pending.delete(id);reject(new Error('GASブリッジを開けませんでした。'));return}postToGasBridge({type:'DAILY_CORE_REQUEST',id,method,args})};if(bridgeState.ready)send();else bridgeState.waiters.push(send)})}
